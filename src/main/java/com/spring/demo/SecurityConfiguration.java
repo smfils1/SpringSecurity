@@ -19,7 +19,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.withUser("admin").password("admin").roles("ADMIN").and()
 		.withUser("customer").password("customer").roles("CUSTOMER").
 		and()
-		.withUser("c1").authorities("ACCESS_DISCOUNT").roles("CUSTOMER").
+		.withUser("c1").authorities("ACCESS_DISCOUNT","ROLE_CUSTOMER").
 		password("c1");
 	}
 	
@@ -27,10 +27,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.mvcMatchers("/").permitAll()
+        .mvcMatchers("/h2-console/**").permitAll()
 		.mvcMatchers("/customer").hasRole("CUSTOMER")
 		.mvcMatchers("/customer/vip").hasAnyAuthority("ACCESS_DISCOUNT", "ROLE_CUSTOMER")
 		.mvcMatchers("/admin").hasRole("ADMIN")
 		.and()
+		.csrf().disable()
+        .headers().frameOptions().sameOrigin() //For h2 console
+        .and()    
 		.httpBasic();
 		
 	}
