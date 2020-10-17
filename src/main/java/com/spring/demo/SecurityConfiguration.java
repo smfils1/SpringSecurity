@@ -17,7 +17,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication()
 		.withUser("admin").password("admin").roles("ADMIN").and()
-		.withUser("customer").password("customer").roles("CUSTOMER");
+		.withUser("customer").password("customer").roles("CUSTOMER").
+		and()
+		.withUser("c1").authorities("ACCESS_DISCOUNT").roles("CUSTOMER").
+		password("c1");
 	}
 	
 	@Override
@@ -25,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 		.mvcMatchers("/").permitAll()
 		.mvcMatchers("/customer").hasRole("CUSTOMER")
+		.mvcMatchers("/customer/vip").hasAnyAuthority("ACCESS_DISCOUNT", "ROLE_CUSTOMER")
 		.mvcMatchers("/admin").hasRole("ADMIN")
 		.and()
 		.httpBasic();

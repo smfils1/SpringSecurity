@@ -12,4 +12,9 @@ public class CustomerController {
 	static public String hello() {
 		return "hello customer";
 	}
+	
+	@GetMapping("/vip")
+	static public String helloVip() {
+		return "hello vip";
+	}
 }
