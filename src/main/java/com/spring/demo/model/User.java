@@ -27,7 +27,7 @@ public class User {
 	
 	private String permissions;
 
-	private int active;
+	private int enable;
 	
 
 	protected User() {}
@@ -37,7 +37,7 @@ public class User {
 		this.password = password;
 		this.roles = roles;
 		this.permissions = permissions;
-		this.active = 1;
+		this.enable = 1;
 	}
 	
 	public long getId() {
@@ -80,12 +80,12 @@ public class User {
 		this.permissions = permissions;
 	}
 
-	public int getActive() {
-		return active;
+	public int getEnable() {
+		return enable;
 	}
 
-	public void setActive(int active) {
-		this.active = active;
+	public void setEnable(int enable) {
+		this.enable = enable;
 	}
 
 	public List<String> getRoleList(){
