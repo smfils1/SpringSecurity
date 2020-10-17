@@ -1,11 +1,14 @@
-package com.spring.demo;
+package com.spring.demo.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -13,14 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
+	@Autowired
+	private UserDetailsService userDetailService;
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-		.withUser("admin").password("admin").roles("ADMIN").and()
-		.withUser("customer").password("customer").roles("CUSTOMER").
-		and()
-		.withUser("c1").authorities("ACCESS_DISCOUNT","ROLE_CUSTOMER").
-		password("c1");
+		auth.authenticationProvider(authenticationProvider());
 	}
 	
 	@Override
@@ -42,5 +42,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Bean
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    
+    @Bean
+    DaoAuthenticationProvider authenticationProvider() {
+    	DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+    	daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+    	daoAuthenticationProvider.setUserDetailsService(userDetailService);
+    	return daoAuthenticationProvider;
     }
 }
