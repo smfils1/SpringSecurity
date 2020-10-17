@@ -22,7 +22,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().authenticated().and().httpBasic();
+		http.authorizeRequests()
+		.mvcMatchers("/").permitAll()
+		.mvcMatchers("/customer").hasRole("CUSTOMER")
+		.mvcMatchers("/admin").hasRole("ADMIN")
+		.and()
+		.httpBasic();
+		
 	}
 	
     @Bean
